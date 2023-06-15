@@ -6,13 +6,48 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script type="module" defer src="index.mjs"></script>
+    <script defer src="index.js"></script>
 </head>
 
-<body>
-    <input type="text" placeholder="Filtre os nomes...">
-    <span></span>
-    <ul></ul>
+<body>dwad aw
+    TreinaWeb
+    <br />
+
+    <button onclick="start()">Start Worker</button>
+    <br />
+    SharedWorker: <span id="resposta-worker"></span>
+    <br />
+    SharedWorker 2: <span id="resposta-worker2"></span>
+    <br />
+    SharedWorker 3: <span id="resposta-worker3"></span>
 </body>
+
+<script>
+    function start() {
+        const mySharedWorker = new SharedWorker('./sharedWorker.js');
+        const mySharedWorker2 = new SharedWorker('./sharedWorker.js');
+        const mySharedWorker3 = new SharedWorker('./sharedWorker3.js');
+        mySharedWorker.port.start();
+        mySharedWorker.port.onmessage = function (event) {
+            const element = document.querySelector('#resposta-worker');
+            element.innerText = event.data;
+        }
+
+        mySharedWorker2.port.start();
+        mySharedWorker2.port.onmessage = function (event) {
+            const element = document.querySelector('#resposta-worker2');
+            element.innerText = event.data;
+        }
+
+
+        mySharedWorker3.port.start();
+        mySharedWorker3.port.onmessage = function (event) {
+            const element = document.querySelector('#resposta-worker3');
+            element.innerText = event.data;
+        }
+
+    }
+
+</script>
 
 </html>
