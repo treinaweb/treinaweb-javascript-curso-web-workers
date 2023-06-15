@@ -1,28 +1,35 @@
-function start() {
-    const outputNormal = document.querySelector("#output-normal");
-    let valueNormal = 0;
-    setInterval(() => {
-        valueNormal++;
-        outputNormal.innerText = valueNormal;
-    }, 1000);
+import { getNomes } from './repository.mjs'
+const myInput = document.querySelector("input");
+const nomesGlobal = [];
 
-    startWorker();
-}
+window.addEventListener("load", () => {
+    const ul = document.querySelector("ul");
+    const nomes = getNomes(200000);
+
+    let element = '';
+    nomes.forEach((nome) => {
+        nomesGlobal.push(nome);
+        element += `<li>${nome}</li>`
+    })
+    ul.innerHTML = element;
+});
 
 
+myInput.addEventListener("keyup", () => {
+    const mySpan = document.querySelector("span");
+    mySpan.innerText = 'Pesquisando...';
+    const { value } = myInput;
+    const worker = new Worker("./myWorker.js")
 
-function startWorker() {
-    const outputWorker = document.querySelector("#output-worker");
-    const worker = new Worker("./myWorker.js");
-    worker.postMessage("olá worker js");
-    worker.onmessage = function ({ data: count }) {
-        // const count = event.data;
-        outputWorker.innerText = count;
+    worker.postMessage({ nomesGlobal, value })
+
+    worker.onmessage = function ({ data }) {
+        const ul = document.querySelector("ul");
+        let element = '';
+        data.forEach((nome) => {
+            element += `<li>${nome}</li>`
+        })
+        mySpan.innerText = '';
+        ul.innerHTML = element;
     }
-
-
-    // setTimeout(() => {
-
-    //     worker.terminate();
-    // }, 4000);
-}
+});
