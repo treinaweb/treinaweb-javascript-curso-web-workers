@@ -6,46 +6,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script defer src="index.js"></script>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body>dwad aw
-    TreinaWeb
-    <br />
+<body>
+    <h1>Treinaweb</h1>
 
-    <button onclick="start()">Start Worker</button>
-    <br />
-    SharedWorker: <span id="resposta-worker"></span>
-    <br />
-    SharedWorker 2: <span id="resposta-worker2"></span>
-    <br />
-    SharedWorker 3: <span id="resposta-worker3"></span>
+    <button onclick="registrarWorker()">Adicionar cache</button>
+
+
 </body>
-
 <script>
-    function start() {
-        const mySharedWorker = new SharedWorker('./sharedWorker.js');
-        const mySharedWorker2 = new SharedWorker('./sharedWorker.js');
-        const mySharedWorker3 = new SharedWorker('./sharedWorker3.js');
-        mySharedWorker.port.start();
-        mySharedWorker.port.onmessage = function (event) {
-            const element = document.querySelector('#resposta-worker');
-            element.innerText = event.data;
-        }
-
-        mySharedWorker2.port.start();
-        mySharedWorker2.port.onmessage = function (event) {
-            const element = document.querySelector('#resposta-worker2');
-            element.innerText = event.data;
-        }
-
-
-        mySharedWorker3.port.start();
-        mySharedWorker3.port.onmessage = function (event) {
-            const element = document.querySelector('#resposta-worker3');
-            element.innerText = event.data;
-        }
-
+    function registrarWorker() {
+        navigator.serviceWorker.register('service-worker.js')
+            .then(function (reg) {
+                console.log('Service Worker registrado com sucesso.', reg.scope);
+            }).catch(function (err) {
+                console.log('Falha ao registrar o Service Worker.', err);
+            });
     }
 
 </script>
