@@ -1,28 +1,43 @@
+const CACHE_NAME = '1.0.0';
+
+const URL_TO_CACHES = [
+    '/index.html',
+    '/style/style.css',
+    '/sobre/index.html'
+];
+
 
 self.addEventListener('install', function (event) {
-    console.log('install')
+    event.waitUntil(caches.open(CACHE_NAME).then((cache) => {
+        return cache.addAll(URL_TO_CACHES);
+    }))
 });
 
 
-self.addEventListener('fetch', function (event) {
-    if (event.request.url.includes('index.html')) {
-        const responseContent = `
-            <html>
-                <body>
-                    <h1>Olá TreinaWeb</h1>
-                </body>
-            </html>
-        `
-        event.respondWith(new Response(responseContent, {
-            headers: {
-                "Content-Type": "text/html"
-            }
-        }))
+self.addEventListener("fetch", function (event) {
+
+    if (event.request.method !== 'GET') {
+        return;
     }
+
+    event.respondWith(
+        caches.match(event.request)
+            .then((response) => {
+                const fetchRequest = event.request.clone();
+                return response || fetch(fetchRequest);
+            })
+    )
 });
 
 
 
 self.addEventListener('activate', function (event) {
-    console.log("activate")
+    const cacheWhitelist = [CACHE_NAME];
+    event.waitUntil(caches.keys().then(cachesKey => {
+        return Promise.all(cachesKey.map((key) => {
+            if (cacheWhitelist.indexOf(key) === -1) {
+                return caches.delete(key);
+            }
+        }))
+    }))
 });
