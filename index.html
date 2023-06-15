@@ -21,7 +21,7 @@
     function registrarWorker() {
         navigator.serviceWorker.register('service-worker.js')
             .then(function (reg) {
-                console.log('Service Worker registrado com sucesso.', reg.scope);
+                console.log('Service Worker registrado com sucesso.', reg);
             }).catch(function (err) {
                 console.log('Falha ao registrar o Service Worker.', err);
             });
