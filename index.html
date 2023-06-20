@@ -6,15 +6,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script type="module" src="index.mjs"></script>
+
 </head>
 
 <body>
     TreinaWeb
-    <br /><br />
-    <input type="text" placeholder="Filtre o nome...">
-    <span></span>
-    <ul></ul>
+    <br />
+    <button onclick="registerServiceWorker()">start worker</button>
 </body>
+<script>
+    function registerServiceWorker() {
+
+
+        navigator.serviceWorker.register('./service-worker.js')
+            .then((event) => {
+                console.log('Service Worker registrado com sucesso', event.scope);
+            })
+            .catch((err) => {
+                console.log("Falha ao registrar o Service Worker", err);
+            })
+
+
+    }
+</script>
 
 </html>
